@@ -41,26 +41,19 @@ const sendParkingPass = async (
     .click();
 
   await page.locator("[name=phoneno]").fill(cellNum);
-
-  // In this case, sends parking pass form to visitor
-  if (licensePlate !== undefined && name !== undefined) {
-    await page
-      .locator(
-        '.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child'
-      )
-      .fill(licensePlate);
-    await page.locator("[name=name]").fill(name);
-    await page.getByRole("checkbox").check();
-  }
+  await page.locator("[name=name]").fill(name);
+  await page.getByRole("checkbox").check();
+  await page
+    .locator(
+      '.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child'
+    )
+    .fill(licensePlate);
 
   const button = page.getByRole("button", {
-    name: "Send Parking Pass by Text" || "Create Visitor Parking Pass",
+    name: "Create Visitor Parking Pass",
   });
 
-  /**
-   * TODO: Remove timeout
-   */
-  await page.waitForTimeout(2000);
+  // await page.waitForTimeout(2000);
   await button.click();
 
   return page;
@@ -98,5 +91,7 @@ const sendParkingPass = async (
   });
 
   await page.waitForURL("https://www.pass10x.com/confirmtextmsg");
+  await page.close();
+  await context.close();
   await browser.close();
 })();
